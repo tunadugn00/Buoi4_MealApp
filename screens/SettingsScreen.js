@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function SettingsScreen() {
   return (
     <View style={styles.container}>
-      <Text>Settings Screen</Text>
+      <Text>Màn hình Cài đặt</Text>
     </View>
   );
 }

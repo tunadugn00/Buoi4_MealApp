@@ -1,15 +1,43 @@
 // screens/MealDetailScreen.js
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { ALL_MEALS } from '../data/mealData';
+import { Ionicons } from '@expo/vector-icons';
+import { useFavorites } from '../components/FavoritesContext';
+import { useCart } from '../components/CartContext';
 
-export default function MealDetailScreen({ route }) {
+export default function MealDetailScreen({ route, navigation }) {
   const { mealId } = route.params;
   const meal = ALL_MEALS.find(m => m.id === mealId);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { addToCart } = useCart();
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Ionicons 
+          name={isFavorite(mealId) ? "heart" : "heart-outline"} 
+          size={24} 
+          color={isFavorite(mealId) ? "red" : "black"} 
+          style={{ marginRight: 15 }}
+          onPress={() => toggleFavorite(mealId)}
+        />
+      ),
+    });
+  }, [navigation, isFavorite, toggleFavorite, mealId]);
+
+  const handleAddToCart = () => {
+    addToCart(meal, 1);
+    Alert.alert(
+      "Thành công",
+      `Đã thêm ${meal.name} vào giỏ hàng`,
+      [{ text: "OK" }]
+    );
+  };
+
   if (!meal) {
-    return <Text>Không tìm thấy món ăn</Text>;
+    return <Text style={styles.errorText}>Không tìm thấy món ăn</Text>;
   }
 
   return (
@@ -33,11 +61,15 @@ export default function MealDetailScreen({ route }) {
       <View style={styles.details}>
         <Text style={styles.name}>{meal.name}</Text>
         <Text style={styles.description}>{meal.description}</Text>
+        <Text style={styles.price}>Giá: {meal.price} VND</Text>
         <Text style={styles.sectionTitle}>Nguyên liệu:</Text>
         {meal.ingredients.map((ingredient, index) => (
           <Text key={index} style={styles.ingredient}>• {ingredient}</Text>
         ))}
         <Text style={styles.prepTime}>Thời gian chuẩn bị: {meal.prepTime}</Text>
+        <TouchableOpacity style={styles.orderButton} onPress={handleAddToCart}>
+          <Text style={styles.orderButtonText}>Thêm vào giỏ hàng</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -46,6 +78,7 @@ export default function MealDetailScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   imageContainer: {
     width: '100%',
@@ -78,6 +111,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 15,
   },
+  price: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#007AFF',
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -92,5 +131,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'italic',
     marginTop: 10,
+  },
+  errorText: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 50,
+  },
+  orderButton: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  orderButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

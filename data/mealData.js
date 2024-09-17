@@ -16,6 +16,7 @@ export const ALL_MEALS = [
         category: '1',
         image: 'https://toquoc.mediacdn.vn/280518851207290880/2023/7/21/2f2fafar-media-production-webs3amazonawscom2fbrightspot2fd52fab2fc294b19d4b31856cddeb0a1c16ca2fshutterstock-1840735105-16868161084121474746128-16899282921001164651526.jpg',
         description: 'Món ăn đặc trưng của Hà Nội với bún, chả nướng và nước mắm chua ngọt.',
+        price:'30.000',
         ingredients: ['Bún', 'Thịt lợn nướng', 'Nem rán', 'Rau sống', 'Nước mắm pha'],
         prepTime: '45 phút'
       },
@@ -33,7 +34,7 @@ export const ALL_MEALS = [
 
       // Món tráng miệng
       {
-        id: '3',
+        id: '10',
         name: 'Chè trôi nước',
         category: '2', 
         image: 'https://cdn.tgdd.vn/Files/2021/08/20/1376549/top-15-mon-trang-mieng-viet-nam-ngon-nhat-ma-ban-nen-biet-202108201445168873.jpg',
