@@ -14,6 +14,7 @@ import OrderScreen from './screens/OrderScreen';
 import CartScreen from './screens/CartScreen';
 import { FavoritesProvider } from './components/FavoritesContext';
 import { CartProvider } from './components/CartContext';
+import { ThemeProvider } from './components/ThemeContext';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -129,12 +130,14 @@ function DrawerNavigator() {
 
 export default function App() {
   return (
-    <FavoritesProvider>
-      <CartProvider>
-        <NavigationContainer>
-          <DrawerNavigator />
-        </NavigationContainer>
-      </CartProvider>
-    </FavoritesProvider>
+    <ThemeProvider>
+      <FavoritesProvider>
+        <CartProvider>
+          <NavigationContainer>
+            <DrawerNavigator />
+          </NavigationContainer>
+        </CartProvider>
+      </FavoritesProvider>
+    </ThemeProvider>
   );
 }

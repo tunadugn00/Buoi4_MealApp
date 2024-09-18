@@ -5,6 +5,8 @@ import { ALL_MEALS } from '../data/mealData';
 import { Ionicons } from '@expo/vector-icons';
 import { useFavorites } from '../components/FavoritesContext';
 import { useCart } from '../components/CartContext';
+import { useTheme } from '../components/ThemeContext';
+import { ToastAndroid } from 'react-native';
 
 export default function MealDetailScreen({ route, navigation }) {
   const { mealId } = route.params;
@@ -12,6 +14,7 @@ export default function MealDetailScreen({ route, navigation }) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const { addToCart } = useCart();
   const [isLoading, setIsLoading] = useState(true);
+  const { isDarkMode } = useTheme();
 
   useEffect(() => {
     navigation.setOptions({
@@ -29,11 +32,7 @@ export default function MealDetailScreen({ route, navigation }) {
 
   const handleAddToCart = () => {
     addToCart(meal, 1);
-    Alert.alert(
-      "Thành công",
-      `Đã thêm ${meal.name} vào giỏ hàng`,
-      [{ text: "OK" }]
-    );
+    ToastAndroid.show(`"${meal.name}" đã được thêm vào giỏ hàng`, ToastAndroid.SHORT);
   };
 
   if (!meal) {
@@ -41,7 +40,7 @@ export default function MealDetailScreen({ route, navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, isDarkMode && styles.darkContainer]}>
       <View style={styles.imageContainer}>
         {isLoading && (
           <View style={styles.loadingContainer}>
@@ -59,14 +58,14 @@ export default function MealDetailScreen({ route, navigation }) {
         />
       </View>
       <View style={styles.details}>
-        <Text style={styles.name}>{meal.name}</Text>
-        <Text style={styles.description}>{meal.description}</Text>
-        <Text style={styles.price}>Giá: {meal.price} VND</Text>
-        <Text style={styles.sectionTitle}>Nguyên liệu:</Text>
+        <Text style={[styles.name, isDarkMode && styles.lightText]}>{meal.name}</Text>
+        <Text style={[styles.description, isDarkMode && styles.lightText]}>{meal.description}</Text>
+        <Text style={[styles.price, isDarkMode && styles.lightText]}>Giá: {meal.price} VND</Text>
+        <Text style={[styles.sectionTitle, isDarkMode && styles.lightText]}>Nguyên liệu:</Text>
         {meal.ingredients.map((ingredient, index) => (
-          <Text key={index} style={styles.ingredient}>• {ingredient}</Text>
+          <Text key={index} style={[styles.ingredient, isDarkMode && styles.lightText]}>• {ingredient}</Text>
         ))}
-        <Text style={styles.prepTime}>Thời gian chuẩn bị: {meal.prepTime}</Text>
+        <Text style={[styles.prepTime, isDarkMode && styles.lightText]}>Thời gian chuẩn bị: {meal.prepTime}</Text>
         <TouchableOpacity style={styles.orderButton} onPress={handleAddToCart}>
           <Text style={styles.orderButtonText}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
@@ -148,5 +147,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  darkContainer: {
+    backgroundColor: '#333',
+  },
+  lightText: {
+    color: '#fff',
   },
 });
