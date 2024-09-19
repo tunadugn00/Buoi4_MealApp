@@ -123,6 +123,11 @@ function DrawerNavigator() {
         component={FavoritesStack} 
         options={{ title: 'Yêu thích' }} 
       />
+      <Drawer.Screen 
+        name="CartDrawer" 
+        component={CartScreen} 
+        options={{ title: 'Giỏ hàng' }} 
+      />
       <Drawer.Screen name="Settings" component={SettingsScreen} options={{ title: 'Cài đặt' }} />
     </Drawer.Navigator>
   );
